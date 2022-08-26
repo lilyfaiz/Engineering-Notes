@@ -25,5 +25,33 @@
 **Classification/Regression** Discovery of a function that maps objects into predicted values. Selective Marketing, Performance Prediction, Diagnosing Illness.
 
 
+# ETL Process
+<a href=https://panoply.io/data-warehouse-guide/3-ways-to-build-an-etl-process/>source</a>
+
+**ETL** Loads
+
+## What is Hashing in DBMS?
+In DBMS, hashing is a technique to directly search the location of desired data on the disk without using index structure. 
+### Use Hashing When:
+- For a huge db, an index may not be fast enough
+- When you don't want an index (??)
+
+#### Indexing
+- Addresses in mem are sorted by the key.
+- Use for range retrieval od data
+- Slower than hash for freq updates (since the whole index must be reorganized
+
+#### Hashing
+- Ideal for retrieval of individual records
+- Fast updates for frequent update situations
+- Hash file must be constantly managed
+
+
+## Indexing in DBMS
+### Clustered Index
+Sorts the data rows in the table on key values. Can only be one Clustered index per table. (Usually the primary key)
+
+### Non-Clustered Index
+Stores data and index seperately in different files. The index is a b-tree that contains pointers to the location of each unit of data. A table can have many non-clustered indices (each will have its own index that references the table)
 
 
