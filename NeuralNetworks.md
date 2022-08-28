@@ -173,3 +173,76 @@ class mat_mul_node():
 $$f=W_2max(0,W_1\cdot x)$$
 
 
+# Neural Networks
+
+## Convolutional Neural Networks (Lecture 5)
+
+### Sources
+- [lecture-slides](http://cs231n.stanford.edu/slides/2019/cs231n_2019_lecture05.pdf)
+- [cnn-notes](http://cs231n.github.io/convolutional-networks/)
+- [lecture-video](https://www.youtube.com/watch?v=bNb2fEVKeEo&list=PL3FW7Lu3i5JvHM8ljYj-zLfQRF3EO8sYv&index=5)
+
+Learned this too many times. Moving forward.
+
+### Brief CNN Notes ([cnn-notes](http://cs231n.github.io/convolutional-networks/))
+*__Local Connectivity__. When dealing with high-dimensional inputs such as images, as we saw above it is impractical to connect neurons to all neurons in the previous volume. Instead, we will connect each neuron to only a local region of the input volume. The spatial extent of this connectivity is a hyperparameter called the __receptive field__ of the neuron*
+
+*The connections are local in space (along width and height), but always full along the entire depth of the input volume.*
+
+How are kernels/filters applied to the input data? Three parameters determine the size of the activation for a given input.
+
+*First, the depth of the output volume is a hyperparameter: it corresponds to the __number of filters__ we would like to use, each learning to look for something different in the input.*
+
+*Second, we must specify the __stride__ with which we slide the filter.*
+
+*As we will soon see, sometimes it will be convenient to pad the input volume with zeros around the border. The size of this __zero-padding__ is a hyperparameter.*
+
+__Parameter Sharing__ Allows conv nets to be more efficient than standard FC networks. Instead of connnecting a neuron to every pixel, share features that can be convolved across the image. Assumes that fe
+
+__1x1 convolutions__ Linear combination layer across the dimensions of the input. Often used to expand or shrink the depth dimension.
+
+__Pooling Layers__ progressively reduces the spatial volume of feature maps and reduces the amount of parameters (and therefore computation)
+
+*Getting rid of pooling. Many people dislike the pooling operation and think that we can get away without it. For example, Striving for Simplicity: The All Convolutional Net proposes to discard the pooling layer in favor of architecture that only consists of repeated CONV layers.*
+
+### Network in Network ([paper](https://arxiv.org/pdf/1312.4400v3.pdf)) 2014
+
+__Network in Network__ is the stacking of multiple mlpconv layers. This involves a spatial convolution followed by a series of fully connected layers with nonlinearities that share features across the spatial regions.
+
+Spatial conv $\rightarrow$ __1x1 convolutions__
+
+*The cross channel parametric pooling layer is also equivalent to a convolution layer with 1x1 convolution kernel. This interpretation makes it straightforawrd to understand the structure of NIN.*
+
+*This cascaded cross channel parameteric pooling structure allows complex and learnable
+interactions of cross channel information.*
+
+*In this paper, we propose another strategy called __global average pooling__ to replace the traditional
+fully connected layers in CNN. The idea is to generate one feature map for each corresponding
+category of the classification task in the last mlpconv layer. Instead of adding fully connected layers
+on top of the feature maps, we take the average of each feature map, and the resulting vector is fed
+directly into the softmax layer. One advantage of global average pooling over the fully connected
+layers is that it is more native to the convolution structure by enforcing correspondences between
+feature maps and categories. Thus the feature maps can be easily interpreted as categories confidence
+maps.*
+
+class NetworkinNetwork(tf.keras.layers.Layer):
+    def __init__(self, unit_list, num_mlp_layers=3):
+        super(mlpConv, self).__init__()
+        self.spatial_conv = tf.keras.layers.Conv2D(unit_list[0], 3, padding='same')
+        self.mlp_layers = []
+        self.num_mlp_layers = num_mlp_layers
+        for i in range(num_mlp_layers):
+            self.mlp_layers.append(tf.keras.layers.Conv2D(unit_list[i],1, padding='same', activation='relu'))
+    
+    def call(self, inputs):
+        x = self.spatial_conv(inputs) 
+        for i in self.num_mlp_layers:
+            x = self.mlp_layers[i](x)
+        return x
+        
+ ### All Conv Net ([paper](https://arxiv.org/pdf/1412.6806.pdf) 2015)
+
+*We find that max-pooling can simply be replaced by a convolutional layer with increased stride without loss in accuracy on several image recognition benchmarks. Following this finding – and building on other recent work for finding simple network structures – we propose a new architecture that consists solely of convolutional layers and yields competitive or state of the art performance on several object recognition datasets*
+
+THeres some other interesting stuff here about the use of 1x1 convolutions and deconvoltions for kernel visualization.
+       
