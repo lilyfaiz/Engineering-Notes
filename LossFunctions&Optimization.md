@@ -155,3 +155,17 @@ array([[-0.9708404],
        [-1.1835098]], dtype=float32)>
        
        
+       ### Optimization ([notes](http://cs231n.github.io/optimization-2/))
+
+__Backpropagation__ is a recursive application of the chain rule to a set of  nodes in a computational graph. The objective of backprop is to compute the gradient at x, $\nabla Loss_{W}(x)$.
+
+*The derivative on each variable tells you the sensitivity of the whole expression on its value.*
+
+*Notice that if one of the inputs to the multiply gate is very small and the other is very big, then the multiply gate will do something slightly unintuitive: it will assign a relatively huge gradient to the small input and a tiny gradient to the large input. Note that in linear classifiers where the weights are dot producted wTxi (multiplied) with the inputs, __this implies that the scale of the data has an effect on the magnitude of the gradient for the weights.__ For example, if you multiplied all input data examples xi by 1000 during preprocessing, then the gradient on the weights will be 1000 times larger, and you’d have to lower the learning rate by that factor to compensate*
+
+__Tips:__
+- Normalize your data
+- Use dimension analysis - The gradient for W must have the same shape as W
+- Work small and generalize.
+- __Local gradient is on the right!__
+$\frac{\delta f}{\delta y}= Upstream Gradient * Local Gradient$
